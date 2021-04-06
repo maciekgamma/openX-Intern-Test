@@ -1,11 +1,7 @@
-import { getPosts, getUsers } from "./fetcher";
-import { descriptiveCountPostByUsers, findTitleDuplicates } from "./utils";
-
-const main = async () => {
-  const posts = await getPosts();
-  const users = await getUsers();
-  console.log(descriptiveCountPostByUsers(posts, users));
-  console.log(findTitleDuplicates(posts));
-};
-
-main();
+export { Post, User, getUsers, getPosts } from "./fetcher";
+export {
+  descriptiveCountPostByUsers,
+  findNearestUsers,
+  makeProfiles,
+  findTitleDuplicates,
+} from "./utils";

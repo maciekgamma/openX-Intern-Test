@@ -1,6 +1,9 @@
 import axios from "axios";
 import * as zod from "zod";
 
+/**
+ * Schema of Post object for zod parser
+ */
 const postSchema = zod.object({
   id: zod.number(),
   userId: zod.number(),
@@ -8,6 +11,9 @@ const postSchema = zod.object({
   body: zod.string(),
 });
 
+/**
+ * Schema of User object for zod parser
+ */
 const userSchema = zod.object({
   id: zod.number(),
   name: zod.string(),
@@ -32,13 +38,28 @@ const userSchema = zod.object({
   }),
 });
 
+/**
+ * Type of a Post object generated using it's schema with zod
+ */
+export type Post = zod.infer<typeof postSchema>;
+/**
+ * Type of a User object generated using it's schema with zod
+ */
+export type User = zod.infer<typeof userSchema>;
+
 type ParserReult<T> =
   | { success: false; error: zod.ZodError }
   | { success: true; data: T };
 
-export type Post = zod.infer<typeof postSchema>;
-export type User = zod.infer<typeof userSchema>;
-
+/**
+ * Makes a request to an API and parses the data
+ * @template T targeted type of parser
+ * @param url url of the API endpoint (response must contain `data` field in form of array)
+ * @param parse function that parses data to the tageted type (function returns `ParserResult<T>`
+ * with `success` set to `True` means object was parsed and returned in `data` field and
+ * `False` means object couldn't be parsed and gives error in `error` field)
+ * @returns promise of an array of parsed objects
+ */
 const retriveData = <T>(url: string, parse: (x: any) => ParserReult<T>) => {
   return new Promise<T[]>((resolve, reject) => {
     axios
@@ -60,12 +81,20 @@ const retriveData = <T>(url: string, parse: (x: any) => ParserReult<T>) => {
   });
 };
 
+/**
+ * Gets posts from API and parses them
+ * @returns promis of array of Posts
+ */
 export const getPosts = () =>
   retriveData<Post>(
     "https://jsonplaceholder.typicode.com/posts",
     postSchema.safeParse
   );
 
+/**
+ * Gets users from API and parses them
+ * @returns promise of array of Users
+ */
 export const getUsers = () =>
   retriveData<User>(
     "https://jsonplaceholder.typicode.com/users",

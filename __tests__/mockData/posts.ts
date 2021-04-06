@@ -1,6 +1,6 @@
 export const posts = [
   {
-    userId: 1,
+    userId: -1,
     id: 1,
     title:
       "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
